@@ -2,14 +2,16 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+    id ("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.example.contactsmanagerapp"
-    compileSdk = 34 
+    namespace = "com.example.notetakingapp"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.contactsmanagerapp"
+        applicationId = "com.example.notetakingapp"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
@@ -34,10 +36,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
     buildFeatures {
         dataBinding=true
     }
+
 }
 
 dependencies {
@@ -49,6 +51,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
     val lifecycle_version = "2.6.2"
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -68,4 +71,10 @@ dependencies {
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+    val nav_version = "2.7.6"
+
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 }
