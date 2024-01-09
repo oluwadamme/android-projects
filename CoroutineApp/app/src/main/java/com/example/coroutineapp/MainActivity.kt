@@ -7,6 +7,8 @@ import androidx.databinding.DataBindingUtil
 import com.example.coroutineapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,6 +31,19 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        // running coroutine in parallel
+
+        CoroutineScope(Dispatchers.IO).launch{
+          val one=async {
+              doSomething1()
+          }
+           val two =async {
+               doSomething2()
+           }
+            val result=one.await()+two.await()
+            Log.v("Tagy","Result is $result")
+        }
     }
 
     // we use suspend function to prevent thread blocking and provide smooth exprience
@@ -44,5 +59,17 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private suspend fun doSomething1() : Int{
+        delay(7000)
+        Log.v("Tagy", "Fun1 is done")
+        return 11
+    }
+
+    private suspend fun doSomething2() : Int{
+        delay(6000)
+        Log.v("Tagy", "Fun2 is done")
+        return 18
     }
 }
