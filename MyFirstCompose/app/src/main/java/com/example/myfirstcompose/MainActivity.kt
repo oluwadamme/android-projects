@@ -28,6 +28,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,6 +74,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun DisplayContainer() {
     val context = LocalContext.current.applicationContext
+
+    var count by remember {
+        mutableStateOf(0)
+    }
     Column(
         modifier = Modifier
             .padding(20.dp)
@@ -90,17 +97,23 @@ fun DisplayContainer() {
         )
         Button(
             onClick = {
-                Toast.makeText(context, "You clicked here", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "You clicked here", Toast.LENGTH_SHORT).show()
+
+                count++
             },
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
             modifier = Modifier.width(200.dp)
         ) {
-            Text(text = "Click me")
+            Text(text = "Click me  $count")
 
         }
-        Image(painter = painterResource(id = R.drawable.image), contentDescription = "just image",
-            modifier = Modifier.size(160.dp).clip(CircleShape))
+        Image(
+            painter = painterResource(id = R.drawable.image), contentDescription = "just image",
+            modifier = Modifier
+                .size(160.dp)
+                .clip(CircleShape)
+        )
 
     }
 
