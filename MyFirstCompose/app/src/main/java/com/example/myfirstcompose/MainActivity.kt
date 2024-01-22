@@ -11,22 +11,29 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +46,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,12 +80,19 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayContainer() {
     val context = LocalContext.current.applicationContext
 
     var count by remember {
         mutableStateOf(0)
+    }
+    var enteredValue by remember {
+        mutableStateOf("")
+    }
+    var isAbove18 by remember {
+        mutableStateOf(false)
     }
     Column(
         modifier = Modifier
@@ -90,11 +106,7 @@ fun DisplayContainer() {
                 textDecoration = TextDecoration.LineThrough
             )
         )
-        Text(
-            text = "Bewhwdhjmd", modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .align(Alignment.CenterHorizontally)
-        )
+
         Button(
             onClick = {
 //                Toast.makeText(context, "You clicked here", Toast.LENGTH_SHORT).show()
@@ -115,9 +127,43 @@ fun DisplayContainer() {
                 .clip(CircleShape)
         )
 
+        TextField(
+            value = enteredValue,
+            onValueChange = { value -> enteredValue = value },
+            modifier = Modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+            label = { Text(text = "Name") },
+            placeholder = { Text(text = "Enter your name") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    isAbove18 = validateAge(enteredValue)
+                }
+            ),
+
+            isError = isAbove18,
+
+        )
+        if (!isAbove18) {
+            Text(
+                text = "Youre above 18",
+                color = MaterialTheme.colorScheme.error,
+
+
+                )
+        }
+
+
     }
 
 
+}
+
+private fun validateAge(inputText: String): Boolean {
+    return inputText.toInt() < 18
 }
 
 @Preview(showBackground = true)
