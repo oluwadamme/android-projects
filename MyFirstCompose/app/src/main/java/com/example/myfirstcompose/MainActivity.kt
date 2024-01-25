@@ -10,12 +10,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -94,10 +100,14 @@ fun DisplayContainer() {
     var isAbove18 by remember {
         mutableStateOf(false)
     }
+    var radioOptions = listOf("A", "B", "C")
+    var selected by remember {
+        mutableStateOf(radioOptions[0])
+    }
     Column(
         modifier = Modifier
             .padding(20.dp)
-            .background(color = Color.Cyan), verticalArrangement = Arrangement.Center
+            .background(color = Color.Cyan), verticalArrangement = Arrangement.Top
     ) {
         Text(
             text = stringResource(id = R.string.app_name), style = TextStyle(
@@ -130,7 +140,9 @@ fun DisplayContainer() {
         TextField(
             value = enteredValue,
             onValueChange = { value -> enteredValue = value },
-            modifier = Modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally),
             label = { Text(text = "Name") },
             placeholder = { Text(text = "Enter your name") },
             leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") },
@@ -146,7 +158,7 @@ fun DisplayContainer() {
 
             isError = isAbove18,
 
-        )
+            )
         if (!isAbove18) {
             Text(
                 text = "Youre above 18",
@@ -156,7 +168,30 @@ fun DisplayContainer() {
                 )
         }
 
+        Column(modifier = Modifier.selectableGroup()) {
+            radioOptions.forEach {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .selectable(
+                            selected = (selected == it),
+                            onClick = { selected = it },
+                            role = Role.RadioButton
+                        )
+                        .padding(horizontal = 16.dp)
+                    , verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = selected == it,
+                        onClick = { selected = it },
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                    Text(text = it)
+                }
 
+            }
+        }
     }
 
 
