@@ -75,6 +75,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.example.myfirstcompose.ui.theme.MyFirstComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -91,6 +94,51 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ConstraintsDisplay() {
+    ConstraintLayout {
+        // create a ref
+        val (redBox, blueBox, yellowBox,greenBox,blackBox) = createRefs()
+
+        Box(modifier = Modifier
+            .size(50.dp)
+            .background(Color.Red)
+            .constrainAs(redBox) {
+                end.linkTo(parent.end)
+                start.linkTo(parent.start)
+                width= Dimension.wrapContent
+            })
+        Box(modifier = Modifier
+            .size(50.dp)
+            .background(Color.Blue)
+            .constrainAs(blueBox) {
+                top.linkTo(redBox.bottom)
+            })
+        Box(modifier = Modifier
+            .size(50.dp)
+            .background(Color.Yellow)
+            .constrainAs(yellowBox) {
+                top.linkTo(blueBox.bottom)
+                end.linkTo(blueBox.end)
+            })
+        //using chains
+        Box(modifier = Modifier
+            .size(50.dp)
+            .background(Color.Green)
+            .constrainAs(greenBox) {
+                top.linkTo(yellowBox.bottom)
+            })
+        Box(modifier = Modifier
+            .size(50.dp)
+            .background(Color.Black)
+            .constrainAs(blackBox) {
+                top.linkTo(yellowBox.bottom)
+            })
+
+        createHorizontalChain(greenBox,blackBox, chainStyle = ChainStyle.Spread)
     }
 }
 
@@ -198,7 +246,8 @@ fun ScrollContent(innerPadding: PaddingValues) {
     }
     Column(
         modifier = Modifier
-            .padding(innerPadding).padding(horizontal = 20.dp)
+            .padding(innerPadding)
+            .padding(horizontal = 20.dp)
             .background(color = Color.Cyan),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -296,6 +345,6 @@ private fun validateAge(inputText: String): Boolean {
 @Composable
 fun GreetingPreview() {
     MyFirstComposeTheme {
-        Greeting("Android")
+        ConstraintsDisplay()
     }
 }
