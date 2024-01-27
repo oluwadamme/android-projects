@@ -1,4 +1,4 @@
-package com.example.libraryapp
+package com.example.libraryapp.repository
 
 import com.example.libraryapp.room.BookDB
 import com.example.libraryapp.room.BookEntity
