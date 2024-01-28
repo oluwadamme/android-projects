@@ -13,4 +13,6 @@ class BookViewModel(private val repository: BookRepository):ViewModel() {
             repository.addBookToRoom(bookEntity)
         }
     }
+
+    val getBooks = repository.getAllBooks()
 }
