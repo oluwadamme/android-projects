@@ -37,9 +37,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.libraryapp.repository.BookRepository
 import com.example.libraryapp.room.BookDB
 import com.example.libraryapp.room.BookEntity
+import com.example.libraryapp.screens.UpdateScreen
 import com.example.libraryapp.ui.theme.LibraryAppTheme
 import com.example.libraryapp.viewmodel.BookViewModel
 
@@ -57,7 +62,22 @@ class MainActivity : ComponentActivity() {
                     val db = BookDB.getInstance(cxt)
                     val repository = BookRepository(db)
                     val viewModel = BookViewModel(repository)
-                    MainScreen(viewModel)
+
+                    // Navigation
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "MainScreen") {
+                        composable("MainScreen") {
+                            MainScreen(viewModel, navController)
+                        }
+                        composable("UpdateScreen/{bookId}") {
+                            UpdateScreen(
+                                viewModel,
+                                id = it.arguments?.getString("bookId"),
+                                navController
+                            )
+                        }
+                    }
+
                 }
             }
         }
@@ -66,7 +86,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: BookViewModel) {
+fun MainScreen(viewModel: BookViewModel, navController: NavController) {
 
     var inputBook by remember {
         mutableStateOf("")
@@ -99,14 +119,14 @@ fun MainScreen(viewModel: BookViewModel) {
             Text(text = "Submit")
         }
 
-        BookList(viewModel)
+        BookList(viewModel, navController)
 
 
     }
 }
 
 @Composable
-fun BookCard(viewModel: BookViewModel, book: BookEntity) {
+fun BookCard(viewModel: BookViewModel, book: BookEntity, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -126,7 +146,9 @@ fun BookCard(viewModel: BookViewModel, book: BookEntity) {
                 IconButton(onClick = { viewModel.deleteBook(book) }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+                    navController.navigate("UpdateScreen/${book.id}")
+                }) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Delete")
                 }
             }
@@ -135,11 +157,11 @@ fun BookCard(viewModel: BookViewModel, book: BookEntity) {
 }
 
 @Composable
-fun BookList(viewModel: BookViewModel) {
+fun BookList(viewModel: BookViewModel, navController: NavController) {
     val books by viewModel.getBooks.collectAsState(initial = emptyList())
     LazyColumn(modifier = Modifier.padding(10.dp)) {
         items(books) { it ->
-            BookCard(viewModel = viewModel, book = it)
+            BookCard(viewModel = viewModel, book = it, navController)
         }
     }
 
