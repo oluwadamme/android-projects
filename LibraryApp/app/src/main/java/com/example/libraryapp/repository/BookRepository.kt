@@ -13,6 +13,10 @@ class BookRepository(private val bookDB: BookDB) {
         bookDB.bookDao().deleteBook(bookEntity);
     }
 
+    suspend fun updateBookToRoom(bookEntity: BookEntity){
+        bookDB.bookDao().updateBook(bookEntity);
+    }
+
     fun getAllBooks()= bookDB.bookDao().getAllBooks()
 
 
