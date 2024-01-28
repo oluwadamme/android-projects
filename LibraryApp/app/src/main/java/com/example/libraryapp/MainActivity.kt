@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,9 +96,11 @@ fun MainScreen(viewModel: BookViewModel, navController: NavController) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.padding(top = 20.dp)
 
+    ) {
+Text(text = "My Library App", fontSize = 22.sp, fontWeight = FontWeight.Bold)
         OutlinedTextField(
             value = inputBook,
             onValueChange = { value ->
@@ -133,16 +137,16 @@ fun BookCard(viewModel: BookViewModel, book: BookEntity, navController: NavContr
             .padding(8.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+
             modifier = Modifier.padding(start = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = book.id.toString(), fontSize = 24.sp)
-                Text(text = book.title, fontSize = 24.sp)
+                Text(text = book.id.toString(), fontSize = 24.sp, color = Color.Magenta)
+                Text(text = book.title, fontSize = 24.sp, modifier = Modifier.fillMaxWidth(0.7f))
             }
-            Row() {
+            Row(horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = { viewModel.deleteBook(book) }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                 }
