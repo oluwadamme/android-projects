@@ -11,9 +11,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -87,13 +92,14 @@ fun MainScreen(viewModel: BookViewModel) {
             onClick = {
                 val book = BookEntity(0, inputBook)
                 viewModel.addBook(book)
+                inputBook = ""
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta)
         ) {
             Text(text = "Submit")
         }
 
-        BookList(viewModel  )
+        BookList(viewModel)
 
 
     }
@@ -106,9 +112,24 @@ fun BookCard(viewModel: BookViewModel, book: BookEntity) {
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp),modifier = Modifier.padding(start= 8.dp)) {
-            Text(text = book.id.toString(), fontSize = 24.sp)
-            Text(text = book.title, fontSize = 24.sp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = book.id.toString(), fontSize = 24.sp)
+                Text(text = book.title, fontSize = 24.sp)
+            }
+            Row() {
+                IconButton(onClick = { viewModel.deleteBook(book) }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+                }
+                IconButton(onClick = { }) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Delete")
+                }
+            }
         }
     }
 }

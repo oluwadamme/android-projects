@@ -9,6 +9,10 @@ class BookRepository(private val bookDB: BookDB) {
         bookDB.bookDao().insertBook(bookEntity);
     }
 
+    suspend fun deleteBookToRoom(bookEntity: BookEntity){
+        bookDB.bookDao().deleteBook(bookEntity);
+    }
+
     fun getAllBooks()= bookDB.bookDao().getAllBooks()
 
 
