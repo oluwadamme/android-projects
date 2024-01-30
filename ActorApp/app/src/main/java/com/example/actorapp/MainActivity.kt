@@ -52,7 +52,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(viewModel:CharacterVM) {
     val characters by viewModel.state.collectAsState()
-    ActorsList(characters)
+    // filtering characters without image
+    var filteredCharacters = mutableListOf<Character>()
+    characters.forEach{
+        if (it.image.isNotEmpty()){
+            filteredCharacters.add(it)
+        }
+    }
+    ActorsList(filteredCharacters)
 }
 
 @Composable
@@ -67,12 +74,12 @@ fun ActorsList(characters: List<Character>) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CardItem(item: Character) {
-    Column {
+    Column( modifier = Modifier
+        .padding(4.dp)) {
         GlideImage(
             model = item.image,
             contentDescription = "Image",
             modifier = Modifier
-                .padding(4.dp)
                 .size(width = 120.dp, height = 140.dp)
         )
         Text(text = item.actorName, fontSize = 18.sp)
